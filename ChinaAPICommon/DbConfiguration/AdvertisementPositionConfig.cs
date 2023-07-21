@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChinaAPICommon.Database
+namespace ChinaAPICommon.DbConfiguration
 {
-    internal class MyDbContext
+    internal class AdvertisementPositionConfig
     {
     }
 }

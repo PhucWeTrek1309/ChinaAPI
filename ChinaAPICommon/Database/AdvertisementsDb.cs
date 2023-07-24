@@ -33,10 +33,6 @@ namespace ChinaAPICommon.Database
         /// </summary>
         public int AdvertisementLanguage { get; set; }
         /// <summary>
-        /// te
-        /// </summary>
-        public string? AdvertisementTitle { get; set; }
-        /// <summary>
         /// Đường dần (nếu có)
         /// </summary>
         public string? AdvertisementLink { get; set; }

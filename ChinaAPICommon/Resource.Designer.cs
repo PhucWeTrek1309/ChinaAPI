@@ -22,7 +22,7 @@ namespace ChinaAPICommon {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    public class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace ChinaAPICommon {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ChinaAPICommon.Resource", typeof(Resource).Assembly);
@@ -51,12 +51,138 @@ namespace ChinaAPICommon {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dữ liệu quá độ dài cho phép.
+        /// </summary>
+        public static string DataOutLength {
+            get {
+                return ResourceManager.GetString("DataOutLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bản ghi cần xóa không tồn tại.
+        /// </summary>
+        public static string DeleteNotExist {
+            get {
+                return ResourceManager.GetString("DeleteNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xóa bản ghi thành công.
+        /// </summary>
+        public static string DeleteSuccess {
+            get {
+                return ResourceManager.GetString("DeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email không đúng định dạng.
+        /// </summary>
+        public static string EmailInValid {
+            get {
+                return ResourceManager.GetString("EmailInValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lỗi Exception.
+        /// </summary>
+        public static string Exception {
+            get {
+                return ResourceManager.GetString("Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lỗi Exception.
+        /// </summary>
+        public static string ExceptionDevMsg {
+            get {
+                return ResourceManager.GetString("ExceptionDevMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Có lỗi xảy ra.
+        /// </summary>
+        public static string ExceptionUserMsg {
+            get {
+                return ResourceManager.GetString("ExceptionUserMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thêm dữ liệu thất bại.
+        /// </summary>
+        public static string InsertError {
+            get {
+                return ResourceManager.GetString("InsertError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thêm dữ liệu thành công.
+        /// </summary>
+        public static string InsertSuccess {
+            get {
+                return ResourceManager.GetString("InsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy bản ghi (danh sách).
+        /// </summary>
+        public static string ListRecordNotExist {
+            get {
+                return ResourceManager.GetString("ListRecordNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy bản ghi vối ID.
+        /// </summary>
+        public static string RecordByIdNotExist {
+            get {
+                return ResourceManager.GetString("RecordByIdNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dữ liệu truyền vào bị trống.
+        /// </summary>
+        public static string RequiredValueIsEmpty {
+            get {
+                return ResourceManager.GetString("RequiredValueIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bản ghi cập nhật không tồn tại.
+        /// </summary>
+        public static string UpdateNotExist {
+            get {
+                return ResourceManager.GetString("UpdateNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sửa dữ liệu thành công.
+        /// </summary>
+        public static string UpdateSuccess {
+            get {
+                return ResourceManager.GetString("UpdateSuccess", resourceCulture);
             }
         }
     }

@@ -4,14 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChinaAPICommon.Database;
+using ChinaAPICommon.DbConfiguration;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChinaAPICommon.EFContext
 {
     public class MyDbContext : DbContext
     {
-        public virtual DbSet<AccountDb>? AccountDb { get; set; }
 
+        public MyDbContext()
+        {
+            //
+        }
+
+        public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
+        {
+            //
+        }
+
+
+        public virtual DbSet<AccountDb>? AccountDb { get; set; }
         public virtual DbSet<AdvertisementPositionDb>? AdvertisementPositionDb { get; set; }
         public virtual DbSet<AdvertisementsDb>? AdvertisementsDb { get; set; }
         public virtual DbSet<BillDb>? BillDb { get; set; }
@@ -20,5 +32,28 @@ namespace ChinaAPICommon.EFContext
         public virtual DbSet<ItemDb>? ItemDb { get; set; }
         public virtual DbSet<MenuDb>? MenuDb { get; set; }
         public virtual DbSet<RoleDb>? RoleDb { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AccountConfig());
+
+            modelBuilder.ApplyConfiguration(new AdvertisementConfig());
+
+            modelBuilder.ApplyConfiguration(new AdvertisementPositionConfig());
+
+            modelBuilder.ApplyConfiguration(new BillConfig());
+
+            modelBuilder.ApplyConfiguration(new GroupConfig());
+
+            modelBuilder.ApplyConfiguration(new GroupItemConfig());
+
+            modelBuilder.ApplyConfiguration(new ItemConfig());
+
+            modelBuilder.ApplyConfiguration(new MenuConfig());
+
+            modelBuilder.ApplyConfiguration(new RoleConfig());
+
+            //modelBuilder.Seed();
+        }
     }
 }

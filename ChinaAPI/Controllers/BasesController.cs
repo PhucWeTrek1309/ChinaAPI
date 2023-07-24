@@ -48,7 +48,7 @@ namespace ChinaAPI.Controllers
         {
             try
             {
-                var records = await _baseBL.GetAllRecord();
+                var records = await _baseBAL.GetAllRecord();
                 return Ok(records);
             }
             catch (Exception ex)

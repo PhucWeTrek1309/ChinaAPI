@@ -20,3 +20,7 @@ namespace ChinaAPICommon.DTO
         public string? ErrorMessage { get; set; }
     }
 }
+
+
+
+

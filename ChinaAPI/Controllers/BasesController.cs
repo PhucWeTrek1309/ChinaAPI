@@ -1,7 +1,9 @@
-﻿using ChinaAPI_BAL.BaseBAL;
+﻿using System.Security.Claims;
+using ChinaAPI_BAL.BaseBAL;
 using ChinaAPICommon;
 using ChinaAPICommon.DTO;
 using ChinaAPICommon.Enum;
+using ChinaAPICommon.Untilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChinaAPI.Controllers
@@ -30,10 +32,13 @@ namespace ChinaAPI.Controllers
             try
             {
                 var record = await _baseBAL.GetRecordById(recordId);
-                //if (record == null)
-                //{
-                //    return NotFound();
-                //}
+
+                // Kiểm tra quyền hạn trước khi xử lý
+                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                if (!HasPermission(claimsIdentity!))
+                {
+                    return Unauthorized();
+                }
 
                 return Ok(record);
             }
@@ -49,6 +54,14 @@ namespace ChinaAPI.Controllers
             try
             {
                 var records = await _baseBAL.GetAllRecord();
+
+                // Kiểm tra quyền hạn trước khi xử lý
+                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                if (!HasPermission(claimsIdentity!))
+                {
+                    return Unauthorized();
+                }
+
                 return Ok(records);
             }
             catch (Exception ex)
@@ -64,6 +77,14 @@ namespace ChinaAPI.Controllers
             try
             {
                 var records = await _baseBAL.GetFilter(keyword, limit, offset);
+
+                // Kiểm tra quyền hạn trước khi xử lý
+                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                if (!HasPermission(claimsIdentity!))
+                {
+                    return Unauthorized();
+                }
+
                 return Ok(records);
             }
             catch (Exception ex)
@@ -75,6 +96,12 @@ namespace ChinaAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert(T record)
         {
+            // Kiểm tra quyền hạn trước khi xử lý
+            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            if (!HasPermission(claimsIdentity!))
+            {
+                return Unauthorized();
+            }
             try
             {
                 if (!ModelState.IsValid)
@@ -109,6 +136,13 @@ namespace ChinaAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateRecord(int id, T record)
         {
+            // Kiểm tra quyền hạn trước khi xử lý
+            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            if (!HasPermission(claimsIdentity!))
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -143,6 +177,13 @@ namespace ChinaAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecordById(int id)
         {
+            // Kiểm tra quyền hạn trước khi xử lý
+            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            if (!HasPermission(claimsIdentity!))
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 var record = await _baseBAL.DeleteById(id);
@@ -172,6 +213,14 @@ namespace ChinaAPI.Controllers
         [HttpDelete("BatchDelete")]
         public async Task<IActionResult> DeleteManyRecord(List<int> recordIds)
         {
+
+            // Kiểm tra quyền hạn trước khi xử lý
+            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            if (!HasPermission(claimsIdentity!))
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 var records = await _baseBAL.BatchDelete(recordIds);
@@ -212,6 +261,14 @@ namespace ChinaAPI.Controllers
                 MoreInfo = ex.Message,
                 TradeId = HttpContext.TraceIdentifier
             });
+        }
+
+        #endregion
+
+        #region protected
+        protected bool HasPermission(ClaimsIdentity identity)
+        {
+            return PermissonChecked<T>.HasPermission(identity);
         }
 
         #endregion

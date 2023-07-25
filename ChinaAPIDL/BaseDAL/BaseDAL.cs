@@ -9,6 +9,7 @@ using ChinaAPICommon.CustomAttribute;
 using ChinaAPICommon.DTO;
 using ChinaAPICommon.EFContext;
 using ChinaAPICommon.Enum;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChinaAPI_DAL.BaseDAL
@@ -146,6 +147,19 @@ namespace ChinaAPI_DAL.BaseDAL
         {
             _dbContext!.Set<T>().Add(record);
             return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> Insert(T record, IFormFile file)
+        {
+            // Upload file to the server.
+            //var path = await file.CopyToAsync("path/to/file");
+
+            // Insert the record into the database.
+            //var id = await db.Insert(record);
+
+            // Return the ID of the inserted record.
+            //return id;
+            throw new NotImplementedException();
         }
         /// <summary>
         /// Sửa 1 bản ghi theo ID

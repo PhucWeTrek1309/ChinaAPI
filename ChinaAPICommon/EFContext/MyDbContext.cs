@@ -33,6 +33,8 @@ namespace ChinaAPICommon.EFContext
         public virtual DbSet<MenuDb>? MenuDb { get; set; }
         public virtual DbSet<RoleDb>? RoleDb { get; set; }
 
+        public virtual DbSet<ImageDb>? ImageDb { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AccountConfig());
@@ -52,6 +54,8 @@ namespace ChinaAPICommon.EFContext
             modelBuilder.ApplyConfiguration(new MenuConfig());
 
             modelBuilder.ApplyConfiguration(new RoleConfig());
+
+            modelBuilder.ApplyConfiguration(new ImageConfig());
 
             //modelBuilder.Seed();
         }

@@ -36,10 +36,15 @@ namespace ChinaAPICommon.Database
         /// Mô tả
         /// </summary>
         public string? ItemDescription { get; set; }
+
         /// <summary>
         /// Content sản phẩm
         /// </summary>
         public string? ItemContent { get; set; }
+        /// <summary>
+        /// Id ảnh lưu trên CloudDinary (Phục vụ xóa ảnh)
+        /// </summary>
+        public string? ItemImageId { get; set; }
         /// <summary>
         /// Ảnh item
         /// </summary>

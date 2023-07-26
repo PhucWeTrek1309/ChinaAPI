@@ -32,6 +32,8 @@ namespace ChinaAPICommon.DbConfiguration
 
             builder.Property(e => e.ItemContent).HasMaxLength(500).HasComment("Mô tả item");
 
+            builder.Property(e => e.ItemImageId).HasMaxLength(255).HasComment("Id ảnh trên Cloud");
+
             builder.Property(e => e.ItemImage).HasMaxLength(500).HasComment("Ảnh item");
 
             builder.Property(e => e.ItemAuthor).HasMaxLength(100).HasComment("Tác giả tạo item");

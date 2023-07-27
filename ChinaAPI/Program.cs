@@ -1,5 +1,7 @@
-﻿using CloudinaryDotNet;
+﻿using ChinaAPICommon.EFContext;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<MyDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")!);
+});
+
 
 // Đọc cấu hình từ appsettings.json
 IConfiguration configuration = builder.Configuration;

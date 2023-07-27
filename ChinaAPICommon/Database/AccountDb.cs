@@ -25,10 +25,6 @@ namespace ChinaAPICommon.Database
         /// </summary>
         public string? AccountName { get; set; }
         /// <summary>
-        /// Mã quyền tài khoản (Mã quyền ứng với Id ở bảng Role)
-        /// </summary>
-        public int RoleAccountId { get; set; }
-        /// <summary>
         /// Họ
         /// </summary>
         public string? FirstName { get; set; }
@@ -85,5 +81,7 @@ namespace ChinaAPICommon.Database
         /// </summary>
         public DateTime ModifiedDate { set; get; }
 
+
+        public virtual ICollection<RoleDb> RoleDb { get; set; } = new List<RoleDb>();
     }
 }

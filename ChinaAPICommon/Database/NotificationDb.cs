@@ -10,7 +10,7 @@ namespace ChinaAPICommon.Database
     /// <summary>
     /// Bảng thông tin dơn hàng hoặc phản hồi của khách hàng
     /// </summary>
-    public class BillDb
+    public class NotificationDb
     {
         /// <summary>
         /// ID

@@ -26,6 +26,14 @@ namespace ChinaAPICommon.DbConfiguration
             builder.Property(e => e.GroupId).HasComment("Id bảng Group");
 
             // Tạo các liên kết khóa cho bảng
+
+            builder.HasOne(d => d.GroupDb).WithMany()
+           .HasForeignKey(d => d.GroupId)
+           .HasConstraintName("FK_GroupItem_Group");
+
+            builder.HasOne(d => d.ItemDb).WithMany()
+                .HasForeignKey(d => d.ItemId)
+                .HasConstraintName("FK_GroupItem_Item");
         }
     }
 }

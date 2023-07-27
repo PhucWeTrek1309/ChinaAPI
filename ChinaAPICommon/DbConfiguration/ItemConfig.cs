@@ -48,9 +48,9 @@ namespace ChinaAPICommon.DbConfiguration
 
             builder.Property(e => e.ItemLink).HasMaxLength(255).HasComment("Đường dẫn item");
 
-            builder.Property(e => e.ItemPriceOld).HasComment("Giá (chưa khuyến mãi)");
+            builder.Property(e => e.ItemPriceOld).HasColumnType("decimal(18,4)").HasComment("Giá (chưa khuyến mãi)");
 
-            builder.Property(e => e.ItemPriceNew).HasComment("Giá (khi có khuyến mãi)");
+            builder.Property(e => e.ItemPriceNew).HasColumnType("decimal(18,4)").HasComment("Giá (khi có khuyến mãi)");
 
             builder.Property(e => e.ItemTotalView).HasMaxLength(10).HasComment("Lượt xem");
 
@@ -63,6 +63,8 @@ namespace ChinaAPICommon.DbConfiguration
             builder.Property(e => e.ModifiedDate).HasComment("Thời gian sửa gần nhất");
 
             // Tạo khóa liên kết với các bảng khác
+
+
 
         }
     }

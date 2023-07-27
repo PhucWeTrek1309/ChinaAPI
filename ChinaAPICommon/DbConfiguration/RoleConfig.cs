@@ -20,6 +20,8 @@ namespace ChinaAPICommon.DbConfiguration
 
             builder.Property(e => e.RoleId).HasComment("ID quyền");
 
+            builder.Property(e => e.AccountId).HasComment("ID User");
+
             builder.Property(e => e.RoleName).HasMaxLength(255).HasComment("Tên quyền");
 
             builder.Property(e => e.RoleDescription).HasMaxLength(255).HasComment("Mô tả quyền");
@@ -31,6 +33,8 @@ namespace ChinaAPICommon.DbConfiguration
             builder.Property(e => e.ModifiedDate).HasComment("Thời gian sửa gần nhất");
 
             // Tạo các liên kết với bảng khác
+
+            builder.HasOne(d => d.AccountDb).WithMany(p => p.RoleDb).HasForeignKey(d => d.AccountId);
         }
     }
 }

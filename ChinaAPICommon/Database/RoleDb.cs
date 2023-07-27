@@ -21,6 +21,10 @@ namespace ChinaAPICommon.Database
         /// </summary>
         public string? RoleName { get; set; }
         /// <summary>
+        /// Id user
+        /// </summary>
+        public int AccountId { get; set; }
+        /// <summary>
         /// Mô tả quyền
         /// </summary>
         public string? RoleDescription { get; set; }
@@ -36,5 +40,7 @@ namespace ChinaAPICommon.Database
         /// Thời gian có chỉnh sửa với tài khoản
         /// </summary>
         public DateTime ModifiedDate { set; get; }
+
+        public virtual AccountDb AccountDb { get; set; } = null!;
     }
 }

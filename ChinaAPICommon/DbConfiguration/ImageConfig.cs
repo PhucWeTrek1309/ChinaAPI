@@ -17,11 +17,11 @@ namespace ChinaAPICommon.DbConfiguration
                 // Tạo các rằng buộc cac trường
                 builder.HasKey(e => e.ImageId);
 
-                builder.ToTable("Role").HasComment("bảng ảnh sản phẩm, tin tức, ...");
+                builder.ToTable("Image").HasComment("bảng ảnh sản phẩm, tin tức, ...");
 
                 builder.Property(e => e.ImageId).HasComment("ID ảnh");
 
-                builder.Property(e => e.ImageIid).HasMaxLength(255).HasComment("id trùng với id sản phẩm hoặc id bài viết");
+                builder.Property(e => e.ItemId).HasMaxLength(10).HasComment("id trùng với id sản phẩm hoặc id bài viết");
 
                 builder.Property(e => e.ImageApp).HasMaxLength(100).HasComment("Nơi hiển thị ảnh ( sản phẩm hay tin tức)");
 
@@ -35,8 +35,10 @@ namespace ChinaAPICommon.DbConfiguration
 
                 builder.Property(e => e.ModifiedDate).HasComment("Thời gian sửa gần nhất");
 
-                // Tạo các liên kết với bảng khác
-            }
+            // Tạo các liên kết với bảng khác
+
+             builder.HasOne(d => d.ItemDb).WithMany(p => p.ImageDb).HasForeignKey(d => d.ItemId);
+        }
         }
     }
 

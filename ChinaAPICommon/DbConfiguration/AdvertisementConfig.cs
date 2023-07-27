@@ -43,7 +43,7 @@ namespace ChinaAPICommon.DbConfiguration
                 .HasComment("Cách chuyển trang khi nhấn vào link");
 
             builder.Property(e => e.AdvertisementDescription)
-                .HasColumnType("varchar(MAX")
+                .HasColumnType("varchar(MAX)")
                 .HasComment("Mô tả của banner");
 
             builder.Property(e => e.AdvertisementImage)

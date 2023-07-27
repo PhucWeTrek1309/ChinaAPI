@@ -15,7 +15,7 @@ namespace ChinaAPICommon.Database
         /// <summary>
         /// Id bài viết hoặc sản phâm (nhằm mục đích lưu nhiều ảnh)
         /// </summary>
-        public int ImageIid { get; set; }
+        public int ItemId { get; set; }
         /// <summary>
         /// Ảnh của bài viết hay sản phẩm
         /// </summary>
@@ -40,5 +40,7 @@ namespace ChinaAPICommon.Database
         /// Thời gian có chỉnh sửa với tài khoản
         /// </summary>
         public DateTime ModifiedDate { set; get; }
+
+        public virtual ItemDb ItemDb { get; set; } = null!;
     }
 }

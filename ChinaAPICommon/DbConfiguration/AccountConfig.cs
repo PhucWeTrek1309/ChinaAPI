@@ -29,9 +29,6 @@ namespace ChinaAPICommon.DbConfiguration;
                 .HasMaxLength(100)
                 .HasComment("Mã tài khoản");
 
-            builder.Property(e => e.RoleAccountId)
-                .HasComment("ID quyền tài khoản");
-
             builder.Property(e => e.FirstName)
                 .HasMaxLength(100)
                 .HasComment("FirstName tài khoản");

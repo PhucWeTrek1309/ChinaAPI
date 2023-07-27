@@ -100,6 +100,10 @@ namespace ChinaAPICommon.Database
         /// <summary>
         /// Thời gian có chỉnh sửa với tài khoản
         /// </summary>
-        public DateTime? ModifiedDate { get; set; } 
+        public DateTime? ModifiedDate { get; set; }
+
+        public virtual ICollection<ImageDb> ImageDb { get; set; } = new List<ImageDb>();
+
+
     }
 }

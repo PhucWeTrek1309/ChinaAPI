@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChinaAPICommon.DbConfiguration
 {
-    public class BillConfig : IEntityTypeConfiguration<BillDb>
+    public class NotificationConfig : IEntityTypeConfiguration<NotificationDb>
     {
-        public void Configure(EntityTypeBuilder<BillDb> builder)
+        public void Configure(EntityTypeBuilder<NotificationDb> builder)
         {
             // Tạo các rằng buộc cho các bảng
             builder.HasKey(x => x.BillId);

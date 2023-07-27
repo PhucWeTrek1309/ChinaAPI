@@ -23,5 +23,12 @@ namespace ChinaAPICommon.Database
         /// Id của danh mục
         /// </summary>
         public int GroupId { get; set; }
+
+        public virtual ItemDb? ItemDb { get; set; }
+
+        /// <summary>
+        /// Đối tượng tham chiếu qua khóa ngoại: BlogItem
+        /// </summary>
+        public virtual GroupDb? GroupDb { get; set; }
     }
 }

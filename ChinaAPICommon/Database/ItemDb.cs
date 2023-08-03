@@ -36,7 +36,6 @@ namespace ChinaAPICommon.Database
         /// Mô tả
         /// </summary>
         public string? ItemDescription { get; set; }
-
         /// <summary>
         /// Content sản phẩm
         /// </summary>

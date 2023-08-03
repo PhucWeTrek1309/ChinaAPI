@@ -148,18 +148,28 @@ namespace ChinaAPI_DAL.BaseDAL
             _dbContext!.Set<T>().Add(record);
             return await _dbContext.SaveChangesAsync();
         }
-
-        public async Task<int> Insert(T record, string file)
+        /// <summary>
+        /// Thêm mới 1 bản ghi nếu có image hoặc file media
+        /// </summary>
+        /// <param name="record">Thông tin bản ghi thêm mới</param>
+        /// <param name="file">File cần thêm</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<int> Insert(T record, IFormFile file)
         {
-            // Upload file to the server.
-            //var path = await file.CopyToAsync("path/to/file");
+            var imageProperties = new List<string>();
 
-            // Insert the record into the database.
-            //var id = await db.Insert(record);
+            var properties = typeof(T).GetProperties();
 
-            // Return the ID of the inserted record.
-            //return id;
-            throw new NotImplementedException();
+            foreach (var property in properties)
+            {
+                var imageAttribute = property.GetCustomAttributes(typeof(ImageAttribute), false).FirstOrDefault();
+
+                if (imageAttribute != null)
+                {
+                    imageProperties.Add(property.Name);
+                }
+            }
         }
         /// <summary>
         /// Sửa 1 bản ghi theo ID

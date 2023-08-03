@@ -34,11 +34,11 @@ namespace ChinaAPI.Controllers
                 var record = await _baseBAL.GetRecordById(recordId);
 
                 // Kiểm tra quyền hạn trước khi xử lý
-                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                if (!HasPermission(claimsIdentity!))
-                {
-                    return Unauthorized();
-                }
+                //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                //if (!HasPermission(claimsIdentity!))
+                //{
+                //    return Unauthorized();
+                //}
 
                 return Ok(record);
             }
@@ -56,11 +56,11 @@ namespace ChinaAPI.Controllers
                 var records = await _baseBAL.GetAllRecord();
 
                 // Kiểm tra quyền hạn trước khi xử lý
-                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                if (!HasPermission(claimsIdentity!))
-                {
-                    return Unauthorized();
-                }
+                //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                //if (!HasPermission(claimsIdentity!))
+                //{
+                //    return Unauthorized();
+                //}
 
                 return Ok(records);
             }
@@ -79,11 +79,11 @@ namespace ChinaAPI.Controllers
                 var records = await _baseBAL.GetFilter(keyword, limit, offset);
 
                 // Kiểm tra quyền hạn trước khi xử lý
-                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                if (!HasPermission(claimsIdentity!))
-                {
-                    return Unauthorized();
-                }
+                //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                //if (!HasPermission(claimsIdentity!))
+                //{
+                //    return Unauthorized();
+                //}
 
                 return Ok(records);
             }
@@ -97,11 +97,11 @@ namespace ChinaAPI.Controllers
         public async Task<IActionResult> Insert(T record)
         {
             // Kiểm tra quyền hạn trước khi xử lý
-            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            if (!HasPermission(claimsIdentity!))
-            {
-                return Unauthorized();
-            }
+            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            //if (!HasPermission(claimsIdentity!))
+            //{
+            //    return Unauthorized();
+            //}
             try
             {
                 if (!ModelState.IsValid)
@@ -137,11 +137,11 @@ namespace ChinaAPI.Controllers
         public async Task<IActionResult> UpdateRecord(int id, T record)
         {
             // Kiểm tra quyền hạn trước khi xử lý
-            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            if (!HasPermission(claimsIdentity!))
-            {
-                return Unauthorized();
-            }
+            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            //if (!HasPermission(claimsIdentity!))
+            //{
+            //    return Unauthorized();
+            //}
 
             if (!ModelState.IsValid)
             {
@@ -178,11 +178,11 @@ namespace ChinaAPI.Controllers
         public async Task<IActionResult> DeleteRecordById(int id)
         {
             // Kiểm tra quyền hạn trước khi xử lý
-            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            if (!HasPermission(claimsIdentity!))
-            {
-                return Unauthorized();
-            }
+            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            //if (!HasPermission(claimsIdentity!))
+            //{
+            //    return Unauthorized();
+            //}
 
             try
             {
@@ -215,11 +215,11 @@ namespace ChinaAPI.Controllers
         {
 
             // Kiểm tra quyền hạn trước khi xử lý
-            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            if (!HasPermission(claimsIdentity!))
-            {
-                return Unauthorized();
-            }
+            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            //if (!HasPermission(claimsIdentity!))
+            //{
+            //    return Unauthorized();
+            //}
 
             try
             {

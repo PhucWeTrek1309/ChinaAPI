@@ -44,6 +44,7 @@ namespace ChinaAPICommon.Enum
         /// <summary>
         /// Thêm dữ liệu thất bại 
         /// </summary>
-        InsertError = 8
+        InsertError = 8,
+        
     }
 }

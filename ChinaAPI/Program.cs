@@ -1,4 +1,6 @@
-﻿using ChinaAPICommon.EFContext;
+﻿using ChinaAPI_BAL.BaseBAL;
+using ChinaAPI_DAL.BaseDAL;
+using ChinaAPICommon.EFContext;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +15,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// tạo chuỗi kết nối Db
 builder.Services.AddDbContext<MyDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")!);
 });
-
 
 // Đọc cấu hình từ appsettings.json
 IConfiguration configuration = builder.Configuration;
@@ -35,6 +37,18 @@ cloudinary.Api.Secure = true;
 // Đăng ký Cloudinary vào DI container để sử dụng trong các controller hoặc service
 builder.Services.AddSingleton(cloudinary);
 
+// Đăng kí dependencyInject
+builder.Services.AddScoped(typeof(IBaseDAL<>), typeof(BaseDAL<>));
+
+builder.Services.AddScoped(typeof(IBaseBAL<>), typeof(BaseBAL<>));
+
+builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
+{
+    build.WithOrigins("https://apiwebhost.click/");
+    build.AllowAnyHeader();
+    build.AllowAnyMethod();
+    build.AllowAnyOrigin();
+}));
 
 var app = builder.Build();
 
@@ -42,8 +56,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swager demo");
+    });
 }
+
+app.UseCors("MyCors");
 
 app.UseHttpsRedirection();
 

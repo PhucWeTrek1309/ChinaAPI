@@ -149,7 +149,7 @@ namespace ChinaAPI_DAL.BaseDAL
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<int> Insert(T record, IFormFile file)
+        public async Task<int> Insert(T record, string file)
         {
             // Upload file to the server.
             //var path = await file.CopyToAsync("path/to/file");

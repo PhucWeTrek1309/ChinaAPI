@@ -4,6 +4,7 @@ using ChinaAPICommon;
 using ChinaAPICommon.DTO;
 using ChinaAPICommon.Enum;
 using ChinaAPICommon.Untilities;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChinaAPI.Controllers
@@ -115,16 +116,56 @@ namespace ChinaAPI.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest, new DialogMessage
                     {
                         ErrorCode = MyErrorCode.RecordByIdNotExist,
-                        UserMsg = Resource.InsertError,
-                        DevMsg = Resource.InsertError,
+                        UserMsg = ResourceChinaApi.InsertError,
+                        DevMsg = ResourceChinaApi.InsertError,
                         TradeId = HttpContext.TraceIdentifier
                     });
                 }
 
                 return StatusCode(StatusCodes.Status201Created, new DialogMessage
                 {
-                    DevMsg = Resource.InsertSuccess,
-                    UserMsg = Resource.InsertSuccess
+                    DevMsg = ResourceChinaApi.InsertSuccess,
+                    UserMsg = ResourceChinaApi.InsertSuccess
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpPost("Image")]
+        public async Task<IActionResult> Insert([FromForm] T record, IFormFile file)
+        {
+            // Kiểm tra quyền hạn trước khi xử lý
+            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            //if (!HasPermission(claimsIdentity!))
+            //{
+            //    return Unauthorized();
+            //}
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _baseBAL.Insert(record);
+                if (result.IsSuccess == false)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new DialogMessage
+                    {
+                        ErrorCode = MyErrorCode.RecordByIdNotExist,
+                        UserMsg = ResourceChinaApi.InsertError,
+                        DevMsg = ResourceChinaApi.InsertError,
+                        TradeId = HttpContext.TraceIdentifier
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status201Created, new DialogMessage
+                {
+                    DevMsg = ResourceChinaApi.InsertSuccess,
+                    UserMsg = ResourceChinaApi.InsertSuccess
                 });
             }
             catch (Exception ex)
@@ -156,16 +197,16 @@ namespace ChinaAPI.Controllers
                     return StatusCode(StatusCodes.Status404NotFound, new DialogMessage
                     {
                         ErrorCode = MyErrorCode.UpdateNotExist,
-                        DevMsg = Resource.UpdateNotExist,
-                        UserMsg = Resource.UpdateNotExist,
+                        DevMsg = ResourceChinaApi.UpdateNotExist,
+                        UserMsg = ResourceChinaApi.UpdateNotExist,
                         TradeId = HttpContext.TraceIdentifier
                     });
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new DialogMessage
                 {
-                    DevMsg = Resource.UpdateSuccess,
-                    UserMsg = Resource.UpdateSuccess,
+                    DevMsg = ResourceChinaApi.UpdateSuccess,
+                    UserMsg = ResourceChinaApi.UpdateSuccess,
                 });
             }
             catch (Exception ex)
@@ -191,16 +232,16 @@ namespace ChinaAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new DialogMessage
                     {
-                        UserMsg = Resource.DeleteSuccess,
-                        DevMsg = Resource.DeleteSuccess
+                        UserMsg = ResourceChinaApi.DeleteSuccess,
+                        DevMsg = ResourceChinaApi.DeleteSuccess
                     });
                 }
 
                 return StatusCode(StatusCodes.Status404NotFound, new DialogMessage
                 {
                     ErrorCode = MyErrorCode.DeleteNotExist,
-                    DevMsg = Resource.DeleteNotExist,
-                    UserMsg = Resource.DeleteNotExist,
+                    DevMsg = ResourceChinaApi.DeleteNotExist,
+                    UserMsg = ResourceChinaApi.DeleteNotExist,
                     TradeId = HttpContext.TraceIdentifier
                 });
             }
@@ -228,16 +269,16 @@ namespace ChinaAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new DialogMessage()
                     {
-                        UserMsg = Resource.DeleteSuccess,
-                        DevMsg = Resource.DeleteSuccess
+                        UserMsg = ResourceChinaApi.DeleteSuccess,
+                        DevMsg = ResourceChinaApi.DeleteSuccess
                     });
                 }
 
                 return StatusCode(StatusCodes.Status404NotFound, new DialogMessage
                 {
                     ErrorCode = MyErrorCode.DeleteNotExist,
-                    DevMsg = Resource.DeleteNotExist,
-                    UserMsg = Resource.DeleteNotExist,
+                    DevMsg = ResourceChinaApi.DeleteNotExist,
+                    UserMsg = ResourceChinaApi.DeleteNotExist,
                     TradeId = HttpContext.TraceIdentifier
                 });
 
@@ -256,8 +297,8 @@ namespace ChinaAPI.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new DialogMessage()
             {
                 ErrorCode = MyErrorCode.Exception,
-                DevMsg = Resource.ExceptionDevMsg,
-                UserMsg = Resource.ExceptionUserMsg,
+                DevMsg = ResourceChinaApi.ExceptionDevMsg,
+                UserMsg = ResourceChinaApi.ExceptionUserMsg,
                 MoreInfo = ex.Message,
                 TradeId = HttpContext.TraceIdentifier
             });

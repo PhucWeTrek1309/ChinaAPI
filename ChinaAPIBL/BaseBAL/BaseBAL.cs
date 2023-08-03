@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChinaAPI_DAL.BaseDAL;
 using ChinaAPICommon.CustomAttribute;
 using ChinaAPICommon.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace ChinaAPI_BAL.BaseBAL
 {
@@ -46,6 +47,20 @@ namespace ChinaAPI_BAL.BaseBAL
         }
 
         public async Task<ServicesResult> Insert(T record)
+        {
+            var validateRequiredData = ValidateData<T>.ValidateRequiredData(record);
+            if (!validateRequiredData.IsSuccess)
+            {
+                return validateRequiredData;
+            }
+            await _baseDAL.Insert(record);
+            return new ServicesResult
+            {
+                IsSuccess = true
+            };
+        }
+
+        public async Task<ServicesResult> Insert(T record, IFormFile file)
         {
             var validateRequiredData = ValidateData<T>.ValidateRequiredData(record);
             if (!validateRequiredData.IsSuccess)

@@ -7,17 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Resource.Designer.cs">
+    <Compile Update="ResourceChinaApi.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.resx</DependentUpon>
+      <DependentUpon>ResourceChinaApi.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resource.resx">
+    <EmbeddedResource Update="ResourceChinaApi.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <LastGenOutput>ResourceChinaApi.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

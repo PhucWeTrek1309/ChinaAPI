@@ -22,14 +22,14 @@ namespace ChinaAPICommon {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resource {
+    public class ResourceChinaApi {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource() {
+        internal ResourceChinaApi() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ChinaAPICommon {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ChinaAPICommon.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ChinaAPICommon.ResourceChinaApi", typeof(ResourceChinaApi).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -129,6 +129,15 @@ namespace ChinaAPICommon {
         public static string InsertError {
             get {
                 return ResourceManager.GetString("InsertError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không có ảnh khi thêm dữ liệu.
+        /// </summary>
+        public static string InsertNotImage {
+            get {
+                return ResourceManager.GetString("InsertNotImage", resourceCulture);
             }
         }
         

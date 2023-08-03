@@ -6,9 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ChinaAPICommon;
 using ChinaAPICommon.CustomAttribute;
+using ChinaAPICommon.Database;
 using ChinaAPICommon.DTO;
 using ChinaAPICommon.EFContext;
 using ChinaAPICommon.Enum;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,13 +23,16 @@ namespace ChinaAPI_DAL.BaseDAL
 
         private readonly MyDbContext? _dbContext;
 
+        private readonly Cloudinary _cloudinary;
+
         #endregion
 
         #region Constructor
 
-        public BaseDAL(MyDbContext dbContext)
+        public BaseDAL(MyDbContext dbContext, Cloudinary cloudinary)
         {
             _dbContext = dbContext;
+            _cloudinary = cloudinary;
         }
 
         #endregion
@@ -46,7 +52,7 @@ namespace ChinaAPI_DAL.BaseDAL
                 throw new ErrorException()
                 {
                     ErrorCode = MyErrorCode.RecordByIdNotExist,
-                    ErrorMessage = Resource.RecordByIdNotExist
+                    ErrorMessage = ResourceChinaApi.RecordByIdNotExist
                 };
             }
             return record;
@@ -64,7 +70,7 @@ namespace ChinaAPI_DAL.BaseDAL
                 throw new ErrorException()
                 {
                     ErrorCode = MyErrorCode.ListRecordNotExist,
-                    ErrorMessage = Resource.ListRecordNotExist
+                    ErrorMessage = ResourceChinaApi.ListRecordNotExist
                 };
             }
             return record;
@@ -95,22 +101,22 @@ namespace ChinaAPI_DAL.BaseDAL
             if (!string.IsNullOrEmpty(keyword) && searchableProperties.Any())
             {
                 // Tạo biểu thức lambda để tìm kiếm keyword trong các trường có attribute [Search]
-                var parameter = Expression.Parameter(typeof(T), "x");
-                var keywordExpression = Expression.Constant(keyword, typeof(string));
+                var parameter = System.Linq.Expressions.Expression.Parameter(typeof(T), "x");
+                var keywordExpression = System.Linq.Expressions.Expression.Constant(keyword, typeof(string));
                 var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
 
-                var searchConditions = new List<Expression>();
+                var searchConditions = new List<System.Linq.Expressions.Expression>();
                 foreach (var propertyName in searchableProperties)
                 {
-                    var property = Expression.Property(parameter, propertyName);
+                    var property = System.Linq.Expressions.Expression.Property(parameter, propertyName);
                     if (containsMethod != null)
                     {
-                        var containsExpression = Expression.Call(property, containsMethod, keywordExpression);
+                        var containsExpression = System.Linq.Expressions.Expression.Call(property, containsMethod, keywordExpression);
                         searchConditions.Add(containsExpression);
                     }
                 }
 
-                var searchPredicate = Expression.Lambda<Func<T, bool>>(searchConditions.Aggregate(Expression.OrElse), parameter);
+                var searchPredicate = System.Linq.Expressions.Expression.Lambda<Func<T, bool>>(searchConditions.Aggregate(System.Linq.Expressions.Expression.OrElse), parameter);
                 query = query.Where(searchPredicate);
             }
 
@@ -157,20 +163,51 @@ namespace ChinaAPI_DAL.BaseDAL
         /// <exception cref="NotImplementedException"></exception>
         public async Task<int> Insert(T record, IFormFile file)
         {
-            var imageProperties = new List<string>();
-
-            var properties = typeof(T).GetProperties();
-
-            foreach (var property in properties)
+            if (file == null || file.Length <= 0)
             {
-                var imageAttribute = property.GetCustomAttributes(typeof(ImageAttribute), false).FirstOrDefault();
+                throw new ArgumentException("No file or invalid file provided.");
+            }
 
-                if (imageAttribute != null)
+            string folderName = "Default"; // Thư mục mặc định
+
+            if (record is ItemDb itemRecord)
+            {
+                if (itemRecord.ItemApp == "product")
                 {
-                    imageProperties.Add(property.Name);
+                    folderName = "Product";
+                }
+                else if (itemRecord.ItemApp == "article")
+                {
+                    folderName = "Article";
                 }
             }
+
+            // Lưu ảnh lên Cloudinary
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, file.OpenReadStream()),
+                Folder = folderName
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            string imageUrl = uploadResult.SecureUrl.ToString();
+
+            var imageProperties = typeof(T).GetProperties()
+                .Where(property => Attribute.IsDefined(property, typeof(ImageAttribute)))
+                .ToList();
+
+            // Cập nhật đường dẫn ảnh vào các trường có ImageAttribute
+            foreach (var imageProperty in imageProperties)
+            {
+                imageProperty.SetValue(record, imageUrl);
+            }
+
+            // Thực hiện lưu dữ liệu vào cơ sở dữ liệu
+            _dbContext!.Set<T>().Add(record);
+
+            return await _dbContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Sửa 1 bản ghi theo ID
         /// </summary>
@@ -186,7 +223,7 @@ namespace ChinaAPI_DAL.BaseDAL
                 throw new ErrorException()
                 {
                     ErrorCode = MyErrorCode.UpdateNotExist,
-                    ErrorMessage = Resource.UpdateNotExist
+                    ErrorMessage = ResourceChinaApi.UpdateNotExist
                 };
             }
 
@@ -208,7 +245,7 @@ namespace ChinaAPI_DAL.BaseDAL
                 throw new ErrorException()
                 {
                     ErrorCode = MyErrorCode.DeleteNotExist,
-                    ErrorMessage = Resource.DeleteNotExist
+                    ErrorMessage = ResourceChinaApi.DeleteNotExist
                 };
             }
 
@@ -227,7 +264,7 @@ namespace ChinaAPI_DAL.BaseDAL
                 throw new ErrorException()
                 {
                     ErrorCode = MyErrorCode.DeleteNotExist,
-                    ErrorMessage = Resource.DeleteNotExist
+                    ErrorMessage = ResourceChinaApi.DeleteNotExist
                 };
             foreach (var id in ids)
             {

@@ -149,6 +149,10 @@
     <value>Thêm dữ liệu thất bại</value>
     <comment>Thêm dữ liệu thất bại</comment>
   </data>
+  <data name="InsertNotImage" xml:space="preserve">
+    <value>Không có ảnh khi thêm dữ liệu</value>
+    <comment>Không có ảnh khi thêm dữ liệu</comment>
+  </data>
   <data name="InsertSuccess" xml:space="preserve">
     <value>Thêm dữ liệu thành công</value>
     <comment>Thêm dữ liệu thành công</comment>

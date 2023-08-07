@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChinaAPICommon.CustomAttribute;
 
 namespace ChinaAPICommon.Database
 {
@@ -47,6 +48,7 @@ namespace ChinaAPICommon.Database
         /// <summary>
         /// Ảnh item
         /// </summary>
+        [Image]
         public string? ItemImage { get; set; }
         /// <summary>
         /// Tên người đăng

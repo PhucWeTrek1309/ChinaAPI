@@ -191,10 +191,20 @@ namespace ChinaAPI_DAL.BaseDAL
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
             string imageUrl = uploadResult.SecureUrl.ToString();
+            string IdImage = uploadResult.PublicId.ToString();
 
             var imageProperties = typeof(T).GetProperties()
                 .Where(property => Attribute.IsDefined(property, typeof(ImageAttribute)))
                 .ToList();
+
+            var imageIdProperties = typeof(T).GetProperties()
+                .Where(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)))
+                .ToList();
+
+            foreach (var imageIdProperty in imageIdProperties)
+            {
+                imageIdProperty.SetValue(record, IdImage);
+            }
 
             // Cập nhật đường dẫn ảnh vào các trường có ImageAttribute
             foreach (var imageProperty in imageProperties)
@@ -232,6 +242,85 @@ namespace ChinaAPI_DAL.BaseDAL
             return await _dbContext.SaveChangesAsync();
         }
         /// <summary>
+        /// sửa bản ghi có ảnh hoặc file Media
+        /// </summary>
+        /// <param name="id">Id bản ghi cần sửa</param>
+        /// <param name="recordUpdated">Thong tin bản ghi cần sửa</param>
+        /// <param name="file">File ảnh hoặc media</param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        public async Task<int> Update(int id, T recordUpdated, IFormFile? file)
+        {
+            var entity = await _dbContext!.Set<T>().FindAsync(id);
+            if (entity is null)
+            {
+                throw new ErrorException()
+                {
+                    ErrorCode = MyErrorCode.UpdateNotExist,
+                    ErrorMessage = ResourceChinaApi.UpdateNotExist
+                };
+            }
+
+            var imageProperties = typeof(T).GetProperties()
+                .Where(property => Attribute.IsDefined(property, typeof(ImageAttribute)))
+                .ToList();
+
+            var imageIdProperties = typeof(T).GetProperties()
+                .Where(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)))
+                .ToList();
+
+            if (file != null || file!.Length > 0)
+            {
+                string folderName = "Default";
+                if (recordUpdated is ItemDb itemRecord)
+                {
+                    if (itemRecord.ItemApp == "product")
+                    {
+                        folderName = "Product";
+                    } else if (itemRecord.ItemApp == "Article")
+                    {
+                        folderName = "Article";
+                    }
+                }
+
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    Folder = folderName
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                string newImageUrl = uploadResult.SecureUrl.ToString();
+                string idImage = uploadResult.PublicId;
+
+                foreach (var imageProperty in imageProperties)
+                {
+                    imageProperty.SetValue(recordUpdated, newImageUrl);
+                }
+
+
+                foreach (var imageIdProperty in imageIdProperties)
+                {
+                    imageIdProperty.SetValue(recordUpdated, idImage);
+                }
+
+                // Xóa ảnh cũ (nếu có)
+                foreach (var imageIdProperty in imageIdProperties)
+                {
+                    var oldIdImage = (string)imageIdProperty.GetValue(entity)!;
+                    if (!string.IsNullOrEmpty(oldIdImage))
+                    {
+                        var deleteParam = new DeletionParams(oldIdImage);
+                        var deleteResult = await _cloudinary.DestroyAsync(deleteParam);
+                    }
+                }
+            }
+           
+            _dbContext.Entry(entity).CurrentValues.SetValues(recordUpdated);
+            _dbContext.Update(entity);
+            return await _dbContext.SaveChangesAsync();
+        }
+        /// <summary>
         /// Xóa 1 bản ghi theo ID
         /// </summary>
         /// <param name="id">Id bản ghi cần xóa</param>
@@ -251,6 +340,45 @@ namespace ChinaAPI_DAL.BaseDAL
 
             _dbContext.Set<T>().Remove(record);
             return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteById(int id, IFormFile file)
+        {
+            var entity = await _dbContext!.Set<T>().FindAsync(id);
+            if (entity is null)
+            {
+                throw new ErrorException()
+                {
+                    ErrorCode = MyErrorCode.DeleteNotExist,
+                    ErrorMessage = ResourceChinaApi.DeleteNotExist
+                };
+            }
+
+            if (file != null)
+            {
+                var imageIdProperty = typeof(T).GetProperties()
+                    .FirstOrDefault(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)));
+
+                if (imageIdProperty != null)
+                {
+                    var publicId = (string)imageIdProperty.GetValue(entity)!;
+                    if (!string.IsNullOrEmpty(publicId))
+                    {
+                        // Xóa ảnh từ Cloudinary bằng publicId
+                        var deleteParams = new DeletionParams(publicId);
+                        var deleteResult = await _cloudinary.DestroyAsync(deleteParams);
+
+                        if (deleteResult.Result == "ok")
+                        {
+                            // Đặt giá trị publicId thành null hoặc giá trị mặc định khác (tuỳ bạn)
+                            imageIdProperty.SetValue(entity, null);
+                        }
+                    }
+                }
+            }
+            _dbContext.Remove(entity);
+            return await _dbContext.SaveChangesAsync();
+
         }
         /// <summary>
         /// Xóa nhiều bản ghi theo danh sách id
@@ -274,7 +402,52 @@ namespace ChinaAPI_DAL.BaseDAL
             }
 
             return await _dbContext!.SaveChangesAsync();
-        } 
+        }
+        /// <summary>
+        /// Xóa nhiều bản ghi cùng lúc
+        /// </summary>
+        /// <param name="ids">Danh sách Id bản ghi</param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        public async Task<int> BatchDelete(List<int>? ids, IFormFile file)
+        {
+            if (ids == null || !ids.Any())
+                throw new ErrorException()
+                {
+                    ErrorCode = MyErrorCode.DeleteNotExist,
+                    ErrorMessage = ResourceChinaApi.DeleteNotExist
+                };
+            foreach (var id in ids)
+            {
+                var record = await _dbContext!.Set<T>().FindAsync(id);
+                if (record != null)
+                {
+                    var imageIdProperty = typeof(T).GetProperties()
+                        .FirstOrDefault(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)));
+                    if (imageIdProperty != null)
+                    {
+                        var publicId = (string)imageIdProperty.GetValue(record);
+
+                        if (!string.IsNullOrEmpty(publicId))
+                        {
+                            // Xóa ảnh từ Cloudinary bằng publicId
+                            var deleteParams = new DeletionParams(publicId);
+                            var deleteResult = await _cloudinary.DestroyAsync(deleteParams);
+
+                            if (deleteResult.Result == "ok")
+                            {
+                                // Đặt giá trị publicId thành null hoặc giá trị mặc định khác (tuỳ bạn)
+                                imageIdProperty.SetValue(record, null);
+                            }
+                        }
+                    }
+                }
+                    _dbContext.Set<T>().Remove(record);
+            }
+
+            return await _dbContext!.SaveChangesAsync();
+        }
 
         #endregion
 

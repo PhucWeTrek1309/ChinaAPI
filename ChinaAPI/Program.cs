@@ -44,7 +44,7 @@ builder.Services.AddScoped(typeof(IBaseBAL<>), typeof(BaseBAL<>));
 
 builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
 {
-    build.WithOrigins("https://apiwebhost.click/");
+    build.WithOrigins("http://127.0.0.1:5500/index.html");
     build.AllowAnyHeader();
     build.AllowAnyMethod();
     build.AllowAnyOrigin();

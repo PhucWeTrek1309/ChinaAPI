@@ -150,7 +150,7 @@ namespace ChinaAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var result = await _baseBAL.Insert(record);
+                var result = await _baseBAL.Insert(record, file);
                 if (result.IsSuccess == false)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest, new DialogMessage

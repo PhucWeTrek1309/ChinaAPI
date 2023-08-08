@@ -48,7 +48,10 @@ namespace ChinaAPICommon.Enum
         /// <summary>
         /// Không có ảnh khi Thêm dữ liệu
         /// </summary>
-        InsertNotImage = 9
-        
+        InsertNotImage = 9,
+        /// <summary>
+        /// Xóa ảnh thất bại khi xóa dữ liệu
+        /// </summary>
+        DeleteImageFail = 10,
     }
 }

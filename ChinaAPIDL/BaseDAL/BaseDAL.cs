@@ -163,10 +163,10 @@ namespace ChinaAPI_DAL.BaseDAL
         /// <exception cref="NotImplementedException"></exception>
         public async Task<int> Insert(T record, IFormFile file)
         {
-            if (file == null || file.Length <= 0)
-            {
-                throw new ArgumentException("No file or invalid file provided.");
-            }
+            //if (file == null || file.Length <= 0)
+            //{
+            //    throw new ArgumentException("No file or invalid file provided.");
+            //}
 
             string folderName = "Default"; // Thư mục mặc định
 
@@ -328,22 +328,6 @@ namespace ChinaAPI_DAL.BaseDAL
         /// <exception cref="ErrorException">Không tìm thấy bản ghi cần xóa</exception>
         public async Task<int> DeleteById(int id)
         {
-            var record = await _dbContext!.Set<T>().FindAsync(id);
-            if (record is null)
-            {
-                throw new ErrorException()
-                {
-                    ErrorCode = MyErrorCode.DeleteNotExist,
-                    ErrorMessage = ResourceChinaApi.DeleteNotExist
-                };
-            }
-
-            _dbContext.Set<T>().Remove(record);
-            return await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<int> DeleteById(int id, IFormFile file)
-        {
             var entity = await _dbContext!.Set<T>().FindAsync(id);
             if (entity is null)
             {
@@ -354,55 +338,32 @@ namespace ChinaAPI_DAL.BaseDAL
                 };
             }
 
-            if (file != null)
+            var imageIdProperty = typeof(T).GetProperties()
+                .FirstOrDefault(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)));
+
+            if (imageIdProperty != null)
             {
-                var imageIdProperty = typeof(T).GetProperties()
-                    .FirstOrDefault(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)));
-
-                if (imageIdProperty != null)
+                var publicId = (string)imageIdProperty.GetValue(entity)!;
+                if (!string.IsNullOrEmpty(publicId))
                 {
-                    var publicId = (string)imageIdProperty.GetValue(entity)!;
-                    if (!string.IsNullOrEmpty(publicId))
-                    {
-                        // Xóa ảnh từ Cloudinary bằng publicId
-                        var deleteParams = new DeletionParams(publicId);
-                        var deleteResult = await _cloudinary.DestroyAsync(deleteParams);
+                    var deleteParams = new DeletionParams(publicId);
+                    var deleteResult = await _cloudinary.DestroyAsync(deleteParams);
 
-                        if (deleteResult.Result == "ok")
-                        {
-                            // Đặt giá trị publicId thành null hoặc giá trị mặc định khác (tuỳ bạn)
-                            imageIdProperty.SetValue(entity, null);
-                        }
+                    if (deleteResult.Result != "ok")
+                    {
+                        // Xử lý khi xóa ảnh không thành công (tuỳ theo logic của ứng dụng)
+                        return -1;
                     }
+
+                    // Đặt giá trị publicId thành null hoặc giá trị mặc định khác (tuỳ bạn)
+                    imageIdProperty.SetValue(entity, null);
                 }
             }
+
             _dbContext.Remove(entity);
             return await _dbContext.SaveChangesAsync();
-
         }
-        /// <summary>
-        /// Xóa nhiều bản ghi theo danh sách id
-        /// </summary>
-        /// <param name="ids">Danh sách id cần xóa</param>
-        /// <returns>Danh sách id vừa xóa</returns>
-        /// <exception cref="ErrorException">Không tìm thấy bản ghi cần xóa</exception>
-        public async Task<int> BatchDelete(List<int>? ids)
-        {
-            if (ids == null || !ids.Any())
-                throw new ErrorException()
-                {
-                    ErrorCode = MyErrorCode.DeleteNotExist,
-                    ErrorMessage = ResourceChinaApi.DeleteNotExist
-                };
-            foreach (var id in ids)
-            {
-                var record = await _dbContext!.Set<T>().FindAsync(id);
-                if (record != null)
-                    _dbContext.Set<T>().Remove(record);
-            }
 
-            return await _dbContext!.SaveChangesAsync();
-        }
         /// <summary>
         /// Xóa nhiều bản ghi cùng lúc
         /// </summary>
@@ -410,43 +371,59 @@ namespace ChinaAPI_DAL.BaseDAL
         /// <param name="file"></param>
         /// <returns></returns>
         /// <exception cref="ErrorException"></exception>
-        public async Task<int> BatchDelete(List<int>? ids, IFormFile file)
+        public async Task<int> BatchDelete(List<int>? ids)
         {
             if (ids == null || !ids.Any())
+            {
                 throw new ErrorException()
                 {
                     ErrorCode = MyErrorCode.DeleteNotExist,
                     ErrorMessage = ResourceChinaApi.DeleteNotExist
                 };
-            foreach (var id in ids)
-            {
-                var record = await _dbContext!.Set<T>().FindAsync(id);
-                if (record != null)
-                {
-                    var imageIdProperty = typeof(T).GetProperties()
-                        .FirstOrDefault(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)));
-                    if (imageIdProperty != null)
-                    {
-                        var publicId = (string)imageIdProperty.GetValue(record);
-
-                        if (!string.IsNullOrEmpty(publicId))
-                        {
-                            // Xóa ảnh từ Cloudinary bằng publicId
-                            var deleteParams = new DeletionParams(publicId);
-                            var deleteResult = await _cloudinary.DestroyAsync(deleteParams);
-
-                            if (deleteResult.Result == "ok")
-                            {
-                                // Đặt giá trị publicId thành null hoặc giá trị mặc định khác (tuỳ bạn)
-                                imageIdProperty.SetValue(record, null);
-                            }
-                        }
-                    }
-                }
-                    _dbContext.Set<T>().Remove(record);
             }
 
-            return await _dbContext!.SaveChangesAsync();
+            using var transaction = await _dbContext!.Database.BeginTransactionAsync();
+
+            try
+            {
+                foreach (var id in ids)
+                {
+                    var record = await _dbContext!.Set<T>().FindAsync(id);
+                    if (record != null)
+                    {
+                        var imageIdProperty = typeof(T).GetProperties()
+                            .FirstOrDefault(property => Attribute.IsDefined(property, typeof(ImageIdAttribute)));
+
+                        if (imageIdProperty != null)
+                        {
+                            var publicId = (string)imageIdProperty.GetValue(record)!;
+
+                            if (!string.IsNullOrEmpty(publicId))
+                            {
+                                var deleteParams = new DeletionParams(publicId);
+                                var deleteResult = await _cloudinary.DestroyAsync(deleteParams);
+
+                                if (deleteResult.Result == "ok")
+                                {
+                                    imageIdProperty.SetValue(record, null);
+                                }
+                            }
+                        }
+
+                        _dbContext.Set<T>().Remove(record);
+                    }
+                }
+
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return ids.Count;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         #endregion

@@ -94,48 +94,48 @@ namespace ChinaAPI.Controllers
             }
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> Insert(T record)
+        //{
+        //    // Kiểm tra quyền hạn trước khi xử lý
+        //    //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+        //    //if (!HasPermission(claimsIdentity!))
+        //    //{
+        //    //    return Unauthorized();
+        //    //}
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+
+        //        var result = await _baseBAL.Insert(record);
+        //        if (result.IsSuccess == false)
+        //        {
+        //            return StatusCode(StatusCodes.Status400BadRequest, new DialogMessage
+        //            {
+        //                ErrorCode = MyErrorCode.RecordByIdNotExist,
+        //                UserMsg = ResourceChinaApi.InsertError,
+        //                DevMsg = ResourceChinaApi.InsertError,
+        //                TradeId = HttpContext.TraceIdentifier
+        //            });
+        //        }
+
+        //        return StatusCode(StatusCodes.Status201Created, new DialogMessage
+        //        {
+        //            DevMsg = ResourceChinaApi.InsertSuccess,
+        //            UserMsg = ResourceChinaApi.InsertSuccess
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HandleException(ex);
+        //    }
+        //}
+
         [HttpPost]
-        public async Task<IActionResult> Insert(T record)
-        {
-            // Kiểm tra quyền hạn trước khi xử lý
-            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            //if (!HasPermission(claimsIdentity!))
-            //{
-            //    return Unauthorized();
-            //}
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var result = await _baseBAL.Insert(record);
-                if (result.IsSuccess == false)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, new DialogMessage
-                    {
-                        ErrorCode = MyErrorCode.RecordByIdNotExist,
-                        UserMsg = ResourceChinaApi.InsertError,
-                        DevMsg = ResourceChinaApi.InsertError,
-                        TradeId = HttpContext.TraceIdentifier
-                    });
-                }
-
-                return StatusCode(StatusCodes.Status201Created, new DialogMessage
-                {
-                    DevMsg = ResourceChinaApi.InsertSuccess,
-                    UserMsg = ResourceChinaApi.InsertSuccess
-                });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpPost("Image")]
-        public async Task<IActionResult> Insert([FromForm] T record, IFormFile file)
+        public async Task<IActionResult> Insert([FromForm] T record, IFormFile? file)
         {
             // Kiểm tra quyền hạn trước khi xử lý
             //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
@@ -175,7 +175,7 @@ namespace ChinaAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateRecord(int id, T record)
+        public async Task<IActionResult> UpdateRecord(int id, [FromForm] T record, IFormFile? file)
         {
             // Kiểm tra quyền hạn trước khi xử lý
             //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
@@ -191,7 +191,7 @@ namespace ChinaAPI.Controllers
 
             try
             {
-                var recordUpdate = await _baseBAL.Update(id, record);
+                var recordUpdate = await _baseBAL.Update(id, record, file!);
                 if (recordUpdate.IsSuccess == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new DialogMessage

@@ -64,24 +64,10 @@ namespace ChinaAPI_DAL.BaseDAL
         /// <returns>Số dòng bị ảnh hưởng</returns>
         Task<int> DeleteById(int id);
         /// <summary>
-        /// Xóa bản ghi có ảnh hoặc file Media
-        /// </summary>
-        /// <param name="id">Id bản ghi cần xóa</param>
-        /// <param name="file">File</param>
-        /// <returns></returns>
-        Task<int> DeleteById(int id, IFormFile file);
-        /// <summary>
         /// Xóa nhiều bản ghi
         /// </summary>
         /// <param name="ids">danh sách id bản ghi cần xóa</param>
         /// <returns>Số lượng bản ghi đã xóa</returns>
         Task<int> BatchDelete(List<int>? ids);
-        /// <summary>
-        /// Xóa nhiều sản phẩm khi có ảnh
-        /// </summary>
-        /// <param name="ids">Danh sách Id</param>
-        /// <param name="file">File ảnh</param>
-        /// <returns></returns>
-        Task<int> BatchDelete(List<int>? ids, IFormFile file);
     }
 }

@@ -44,6 +44,7 @@ namespace ChinaAPICommon.Database
         /// <summary>
         /// Id ảnh lưu trên CloudDinary (Phục vụ xóa ảnh)
         /// </summary>
+        [ImageId]
         public string? ItemImageId { get; set; }
         /// <summary>
         /// Ảnh item

@@ -46,42 +46,23 @@ namespace ChinaAPI_BAL.BaseBAL
             return await _baseDAL.GetFilter(keyword ?? "", limit, offset);
         }
 
-        public async Task<ServicesResult> Insert(T record)
+        public async Task<ServicesResult> Insert(T record, IFormFile? file)
         {
             var validateRequiredData = ValidateData<T>.ValidateRequiredData(record);
             if (!validateRequiredData.IsSuccess)
             {
                 return validateRequiredData;
             }
-            await _baseDAL.Insert(record);
-            return new ServicesResult
-            {
-                IsSuccess = true
-            };
-        }
 
-        public async Task<ServicesResult> Insert(T record, IFormFile file)
-        {
-            var validateRequiredData = ValidateData<T>.ValidateRequiredData(record);
-            if (!validateRequiredData.IsSuccess)
+            if (file != null && file.Length > 0)
             {
-                return validateRequiredData;
+                await _baseDAL.Insert(record, file);
             }
-            await _baseDAL.Insert(record, file);
-            return new ServicesResult
+            else
             {
-                IsSuccess = true
-            };
-        }
-
-        public async Task<ServicesResult> Update(int id, T recordUpdated)
-        {
-            var validateRequiredData = ValidateData<T>.ValidateRequiredData(recordUpdated);
-            if (!validateRequiredData.IsSuccess)
-            {
-                return validateRequiredData;
+                await _baseDAL.Insert(record);
             }
-            await _baseDAL.Update(id, recordUpdated);
+            
             return new ServicesResult
             {
                 IsSuccess = true
@@ -95,7 +76,15 @@ namespace ChinaAPI_BAL.BaseBAL
             {
                 return validateRequiredData;
             }
-            await _baseDAL.Update(id, recordUpdated, file);
+
+            if (file != null && file.Length > 0)
+            {
+                await _baseDAL.Update(id, recordUpdated, file);
+            }
+            else
+            {
+                await _baseDAL.Update(id, recordUpdated);
+            }
             return new ServicesResult
             {
                 IsSuccess = true
@@ -105,22 +94,6 @@ namespace ChinaAPI_BAL.BaseBAL
         public async Task<ServicesResult> DeleteById(int id)
         {
             var records = await _baseDAL.DeleteById(id);
-            if (records > 0)
-            {
-                return new ServicesResult
-                {
-                    IsSuccess = true,
-                };
-            }
-            return new ServicesResult
-            {
-                IsSuccess = false,
-            };
-        }
-
-        public async Task<ServicesResult> DeleteById(int id, IFormFile file)
-        {
-            var records = await _baseDAL.DeleteById(id, file);
             if (records > 0)
             {
                 return new ServicesResult
@@ -150,20 +123,6 @@ namespace ChinaAPI_BAL.BaseBAL
             };
         }
 
-        public async Task<ServicesResult> BatchDelete(List<int> ids, IFormFile file)
-        {
-            var records = await _baseDAL.BatchDelete(ids, file);
-            if (records > 0)
-            {
-                return new ServicesResult
-                {
-                    IsSuccess = true,
-                };
-            }
-            return new ServicesResult
-            {
-                IsSuccess = false,
-            };
-        }
+       
     }
 }

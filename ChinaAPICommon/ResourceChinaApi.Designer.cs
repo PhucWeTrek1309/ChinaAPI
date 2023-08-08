@@ -70,6 +70,15 @@ namespace ChinaAPICommon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Xóa ảnh thất bại khi xóa dữ liệu.
+        /// </summary>
+        public static string DeleteImageFail {
+            get {
+                return ResourceManager.GetString("DeleteImageFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bản ghi cần xóa không tồn tại.
         /// </summary>
         public static string DeleteNotExist {

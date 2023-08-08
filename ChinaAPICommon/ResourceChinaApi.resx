@@ -121,6 +121,10 @@
     <value>Dữ liệu quá độ dài cho phép</value>
     <comment>Dữ liệu quá độ dài cho phép</comment>
   </data>
+  <data name="DeleteImageFail" xml:space="preserve">
+    <value>Xóa ảnh thất bại khi xóa dữ liệu</value>
+    <comment>Xóa ảnh thất bại khi xóa dữ liệu</comment>
+  </data>
   <data name="DeleteNotExist" xml:space="preserve">
     <value>Bản ghi cần xóa không tồn tại</value>
     <comment>Bản ghi cần xóa không tồn tại</comment>

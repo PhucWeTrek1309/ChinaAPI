@@ -149,6 +149,10 @@
     <value>Có lỗi xảy ra</value>
     <comment>Có lỗi xảy ra</comment>
   </data>
+  <data name="GetApiFail" xml:space="preserve">
+    <value>Lấy Id mới thất bại</value>
+    <comment>Lấy Id mới Thất bại</comment>
+  </data>
   <data name="InsertError" xml:space="preserve">
     <value>Thêm dữ liệu thất bại</value>
     <comment>Thêm dữ liệu thất bại</comment>

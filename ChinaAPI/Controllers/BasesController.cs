@@ -94,46 +94,6 @@ namespace ChinaAPI.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Insert(T record)
-        //{
-        //    // Kiểm tra quyền hạn trước khi xử lý
-        //    //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-        //    //if (!HasPermission(claimsIdentity!))
-        //    //{
-        //    //    return Unauthorized();
-        //    //}
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-
-        //        var result = await _baseBAL.Insert(record);
-        //        if (result.IsSuccess == false)
-        //        {
-        //            return StatusCode(StatusCodes.Status400BadRequest, new DialogMessage
-        //            {
-        //                ErrorCode = MyErrorCode.RecordByIdNotExist,
-        //                UserMsg = ResourceChinaApi.InsertError,
-        //                DevMsg = ResourceChinaApi.InsertError,
-        //                TradeId = HttpContext.TraceIdentifier
-        //            });
-        //        }
-
-        //        return StatusCode(StatusCodes.Status201Created, new DialogMessage
-        //        {
-        //            DevMsg = ResourceChinaApi.InsertSuccess,
-        //            UserMsg = ResourceChinaApi.InsertSuccess
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return HandleException(ex);
-        //    }
-        //}
-
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] T record, IFormFile? file)
         {

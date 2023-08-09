@@ -133,6 +133,15 @@ namespace ChinaAPICommon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lấy Id mới thất bại.
+        /// </summary>
+        public static string GetApiFail {
+            get {
+                return ResourceManager.GetString("GetApiFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thêm dữ liệu thất bại.
         /// </summary>
         public static string InsertError {

@@ -1,5 +1,7 @@
 ﻿using ChinaAPI_BAL.BaseBAL;
+using ChinaAPI_BAL.ItemBAL;
 using ChinaAPI_DAL.BaseDAL;
+using ChinaAPI_DAL.ItemDAL;
 using ChinaAPICommon.EFContext;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.DataProtection;
@@ -39,8 +41,10 @@ builder.Services.AddSingleton(cloudinary);
 
 // Đăng kí dependencyInject
 builder.Services.AddScoped(typeof(IBaseDAL<>), typeof(BaseDAL<>));
+builder.Services.AddScoped<IItemDAL, ItemDAL>();
 
 builder.Services.AddScoped(typeof(IBaseBAL<>), typeof(BaseBAL<>));
+builder.Services.AddScoped<IItemBAL, ItemBAL>();
 
 builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
 {

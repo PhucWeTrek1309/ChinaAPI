@@ -53,5 +53,9 @@ namespace ChinaAPICommon.Enum
         /// Xóa ảnh thất bại khi xóa dữ liệu
         /// </summary>
         DeleteImageFail = 10,
+        /// <summary>
+        /// Lấy Id mới thất bại
+        /// </summary>
+        GetIdFail = 11
     }
 }
